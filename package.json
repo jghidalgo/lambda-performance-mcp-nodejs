@@ -1,0 +1,32 @@
+{
+  "name": "lambda-performance-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for AWS Lambda performance analysis and cold start optimization",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.4.0",
+    "@aws-sdk/client-lambda": "^3.450.0",
+    "@aws-sdk/client-cloudwatch": "^3.450.0",
+    "@aws-sdk/client-cloudwatch-logs": "^3.450.0",
+    "@aws-sdk/client-sts": "^3.450.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "mcp",
+    "aws",
+    "lambda",
+    "performance",
+    "cold-start",
+    "optimization"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
