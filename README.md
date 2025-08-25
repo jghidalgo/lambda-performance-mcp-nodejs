@@ -4,25 +4,25 @@ A comprehensive Model Context Protocol (MCP) server for analyzing AWS Lambda per
 
 ## Features
 
-### 🔍 Performance Analysis
+### Performance Analysis
 - **Comprehensive Metrics**: Duration, memory usage, error rates, invocation counts
 - **Cold Start Tracking**: Detailed analysis of cold start patterns and frequency
 - **Real-time Monitoring**: Live performance metrics and alerts
 - **Cost Analysis**: Detailed cost breakdown and optimization opportunities
 
-### 📊 Advanced Analytics
+### Advanced Analytics
 - **Percentile Analysis**: P50, P90, P95, P99 duration metrics
 - **Memory Utilization**: Right-sizing recommendations based on actual usage
 - **Error Pattern Analysis**: Identify and categorize error types
 - **Trend Analysis**: Performance trends over time
 
-### 🎯 Optimization Recommendations
+### Optimization Recommendations
 - **Cold Start Optimization**: Provisioned concurrency, package size, initialization
 - **Memory Right-sizing**: Optimal memory allocation based on usage patterns
 - **Cost Optimization**: ARM architecture, duration optimization, resource efficiency
 - **Performance Tuning**: Code optimization, connection pooling, caching strategies
 
-### 📈 Comparative Analysis
+### Comparative Analysis
 - **Multi-function Comparison**: Compare performance across multiple Lambda functions
 - **Benchmarking**: Identify best and worst performers
 - **Resource Utilization**: Compare memory, duration, and cost metrics
