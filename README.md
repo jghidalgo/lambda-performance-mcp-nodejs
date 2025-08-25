@@ -317,21 +317,6 @@ export LOG_LEVEL=debug
 npm start
 ```
 
-## Architecture
-
-```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Kiro Client   │────│  MCP Server      │────│  AWS Services   │
-│                 │    │                  │    │                 │
-│ - Tool calls    │    │ - Lambda         │    │ - Lambda API    │
-│ - Responses     │    │   Analyzer       │    │ - CloudWatch    │
-│                 │    │ - Performance    │    │ - CloudWatch    │
-│                 │    │   Optimizer      │    │   Logs          │
-│                 │    │ - Cold Start     │    │                 │
-│                 │    │   Tracker        │    │                 │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-```
-
 ## Contributing
 
 1. Fork the repository
@@ -340,9 +325,6 @@ npm start
 4. Add tests if applicable
 5. Submit a pull request
 
-## License
-
-MIT License - see LICENSE file for details.
 
 ## Support
 
