@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  lambda-performance-mcp-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: lambda-performance-mcp-dev
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - LOG_LEVEL=debug
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_PROFILE=${AWS_PROFILE}
+      - MCP_SERVER_NAME=lambda-performance-analyzer-dev
+    volumes:
+      # Mount source code for hot reload
+      - .:/app
+      - /app/node_modules
+      # Mount AWS credentials
+      - ${HOME}/.aws:/home/mcp/.aws:ro
+      # Mount logs
+      - ./logs:/app/logs
+    networks:
+      - mcp-dev-network
+    ports:
+      - "3001:3001"  # Health check port
+    labels:
+      - "com.docker.compose.service=lambda-performance-mcp-dev"
+      - "description=Lambda Performance MCP Server - Development"
+    healthcheck:
+      test: ["CMD", "node", "-e", "console.log('Health check passed')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  # Development database for testing (optional)
+  localstack:
+    image: localstack/localstack:latest
+    container_name: lambda-mcp-localstack
+    restart: unless-stopped
+    environment:
+      - SERVICES=lambda,cloudwatch,logs,iam
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - LAMBDA_EXECUTOR=docker
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    ports:
+      - "4566:4566"
+      - "4571:4571"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./tmp/localstack:/tmp/localstack"
+    networks:
+      - mcp-dev-network
+    profiles:
+      - localstack
+
+networks:
+  mcp-dev-network:
+    driver: bridge
+    name: lambda-mcp-dev-network

@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: lambda-performance-mcp-service
+  namespace: lambda-mcp
+  labels:
+    app: lambda-performance-mcp
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "3001"
+    prometheus.io/path: "/metrics"
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3001
+    targetPort: 3001
+    protocol: TCP
+    name: health
+  selector:
+    app: lambda-performance-mcp
+---
+# Optional: LoadBalancer service for external access
+apiVersion: v1
+kind: Service
+metadata:
+  name: lambda-performance-mcp-lb
+  namespace: lambda-mcp
+  labels:
+    app: lambda-performance-mcp
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internal"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 3001
+    targetPort: 3001
+    protocol: TCP
+    name: health
+  selector:
+    app: lambda-performance-mcp

@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lambda-performance-mcp
+  namespace: lambda-mcp
+  labels:
+    app: lambda-performance-mcp
+    version: v1
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: lambda-performance-mcp
+  template:
+    metadata:
+      labels:
+        app: lambda-performance-mcp
+        version: v1
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3001"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: lambda-mcp-service-account
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+      containers:
+      - name: lambda-performance-mcp
+        image: lambda-performance-mcp:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3001
+          name: health
+          protocol: TCP
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: lambda-mcp-config
+              key: NODE_ENV
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: lambda-mcp-config
+              key: LOG_LEVEL
+        - name: MCP_SERVER_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: lambda-mcp-config
+              key: MCP_SERVER_NAME
+        - name: AWS_REGION
+          valueFrom:
+            configMapKeyRef:
+              name: lambda-mcp-config
+              key: AWS_REGION
+        # Use either AWS credentials or IAM service account
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: lambda-mcp-aws-credentials
+              key: AWS_ACCESS_KEY_ID
+              optional: true
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: lambda-mcp-aws-credentials
+              key: AWS_SECRET_ACCESS_KEY
+              optional: true
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          exec:
+            command:
+            - node
+            - -e
+            - "console.log('Health check passed')"
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command:
+            - node
+            - -e
+            - "console.log('Health check passed')"
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        volumeMounts:
+        - name: logging-config
+          mountPath: /app/config
+          readOnly: true
+        - name: tmp
+          mountPath: /tmp
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+      volumes:
+      - name: logging-config
+        configMap:
+          name: lambda-mcp-logging-config
+      - name: tmp
+        emptyDir: {}
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30

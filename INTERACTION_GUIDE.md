@@ -1,6 +1,6 @@
 # How to Interact with Lambda Performance MCP Server
 
-This guide shows you how to set up, configure, and interact with the Lambda Performance MCP server in Kiro with practical examples.
+This guide shows you how to set up, configure, and interact with the Lambda Performance MCP server with MCP clients with practical examples.
 
 ## Quick Setup
 
@@ -29,9 +29,9 @@ export AWS_PROFILE=lambda-analyzer
 npm start
 ```
 
-### Step 2: Configure Kiro MCP Integration
+### Step 2: Configure MCP Client Integration
 
-Add to your `.kiro/settings/mcp.json`:
+Add to your MCP client configuration:
 
 ```json
 {
@@ -55,14 +55,14 @@ Add to your `.kiro/settings/mcp.json`:
 
 ## Natural Language Interactions
 
-Once configured, you can interact with the MCP server using natural language in Kiro:
+Once configured, you can interact with the MCP server using natural language in your MCP client:
 
 ### Basic Performance Analysis
 
 **You ask:**
 > "Analyze the performance of my Lambda function called 'user-authentication-service' over the last 24 hours"
 
-**Kiro will:**
+**The MCP server will:**
 1. Call the `analyze_lambda_performance` tool
 2. Provide comprehensive metrics including duration, cold starts, errors, and memory usage
 3. Show performance trends and bottlenecks
@@ -95,7 +95,7 @@ Once configured, you can interact with the MCP server using natural language in 
 **You ask:**
 > "I'm seeing high cold start rates on my payment-processor function. Can you analyze the cold start patterns?"
 
-**Kiro will:**
+**The MCP server will:**
 1. Use the `track_cold_starts` tool
 2. Analyze CloudWatch logs for INIT_START events
 3. Identify patterns, triggers, and provide specific recommendations
@@ -126,7 +126,7 @@ Once configured, you can interact with the MCP server using natural language in 
 **You ask:**
 > "What optimizations can I make to improve the performance and reduce costs of my API gateway backend functions?"
 
-**Kiro will:**
+**The MCP server will:**
 1. Call `get_optimization_recommendations` for each function
 2. Analyze performance bottlenecks
 3. Provide prioritized, actionable recommendations
@@ -162,7 +162,7 @@ Once configured, you can interact with the MCP server using natural language in 
 **You ask:**
 > "Compare the performance of my three microservices: user-service, order-service, and inventory-service"
 
-**Kiro will:**
+**The MCP server will:**
 1. Use `compare_lambda_performance` tool
 2. Analyze metrics across all functions
 3. Identify best and worst performers with insights
@@ -199,7 +199,7 @@ Once configured, you can interact with the MCP server using natural language in 
 **You ask:**
 > "My Lambda function seems to be using too much memory. Can you analyze the memory utilization and suggest the right size?"
 
-**Kiro will:**
+**The MCP server will:**
 1. Call `analyze_memory_utilization`
 2. Parse CloudWatch logs for memory usage patterns
 3. Provide right-sizing recommendations
@@ -231,7 +231,7 @@ Once configured, you can interact with the MCP server using natural language in 
 **You ask:**
 > "Show me a detailed cost breakdown for all my Lambda functions this month and identify where I can save money"
 
-**Kiro will:**
+**The MCP server will:**
 1. Use `get_cost_analysis` for account-wide analysis
 2. Break down costs by compute, requests, and data transfer
 3. Identify specific optimization opportunities
@@ -267,7 +267,7 @@ Once configured, you can interact with the MCP server using natural language in 
 **You ask:**
 > "Monitor my checkout-service function in real-time for the next 10 minutes and alert me if there are any performance issues"
 
-**Kiro will:**
+**The MCP server will:**
 1. Call `monitor_real_time_performance`
 2. Track live metrics and detect anomalies
 3. Provide immediate alerts for issues
@@ -303,7 +303,7 @@ Cold start frequency higher than usual (12 in 10 minutes)
 **You ask:**
 > "My order-processing function is timing out. Help me identify what's causing the performance issues."
 
-**Kiro will:**
+**The MCP server will:**
 1. Analyze performance metrics and error patterns
 2. Examine duration trends and outliers
 3. Provide specific troubleshooting steps
@@ -313,7 +313,7 @@ Cold start frequency higher than usual (12 in 10 minutes)
 **You ask:**
 > "I'm about to deploy a new version of my user-service. Compare the current performance with last week to establish a baseline."
 
-**Kiro will:**
+**The MCP server will:**
 1. Analyze current performance metrics
 2. Compare with historical data
 3. Provide performance baseline for comparison after deployment
@@ -323,7 +323,7 @@ Cold start frequency higher than usual (12 in 10 minutes)
 **You ask:**
 > "I need to reduce my Lambda costs by 30%. Analyze all my functions and create an optimization plan."
 
-**Kiro will:**
+**The MCP server will:**
 1. Analyze all functions for optimization opportunities
 2. Prioritize recommendations by cost impact
 3. Create a step-by-step optimization plan

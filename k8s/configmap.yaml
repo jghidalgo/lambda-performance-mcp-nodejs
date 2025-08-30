@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lambda-mcp-config
+  namespace: lambda-mcp
+  labels:
+    app: lambda-performance-mcp
+data:
+  NODE_ENV: "production"
+  LOG_LEVEL: "info"
+  MCP_SERVER_NAME: "lambda-performance-analyzer"
+  AWS_REGION: "us-east-1"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lambda-mcp-logging-config
+  namespace: lambda-mcp
+  labels:
+    app: lambda-performance-mcp
+data:
+  logging.json: |
+    {
+      "level": "info",
+      "format": "json",
+      "timestamp": true,
+      "colorize": false,
+      "handleExceptions": true,
+      "handleRejections": true,
+      "exitOnError": false
+    }

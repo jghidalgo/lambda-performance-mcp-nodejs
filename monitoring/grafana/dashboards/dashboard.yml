@@ -1,0 +1,12 @@
+apiVersion: 1
+
+providers:
+  - name: 'lambda-mcp-dashboards'
+    orgId: 1
+    folder: 'Lambda MCP'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards

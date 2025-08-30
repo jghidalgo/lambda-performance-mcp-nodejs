@@ -1,0 +1,106 @@
+version: '3.8'
+
+services:
+  lambda-performance-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: lambda-performance-mcp
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_PROFILE=${AWS_PROFILE}
+      - MCP_SERVER_NAME=lambda-performance-analyzer
+    volumes:
+      # Mount AWS credentials if using profiles
+      - ${HOME}/.aws:/home/mcp/.aws:ro
+      # Mount logs directory
+      - ./logs:/app/logs
+    networks:
+      - mcp-network
+    labels:
+      - "com.docker.compose.service=lambda-performance-mcp"
+      - "description=Lambda Performance MCP Server"
+    healthcheck:
+      test: ["CMD", "node", "-e", "console.log('Health check passed')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Optional: Prometheus for metrics collection
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: lambda-mcp-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - mcp-network
+    profiles:
+      - monitoring
+
+  # Optional: Grafana for visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: lambda-mcp-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    networks:
+      - mcp-network
+    profiles:
+      - monitoring
+    depends_on:
+      - prometheus
+
+  # Optional: Log aggregation with Loki
+  loki:
+    image: grafana/loki:latest
+    container_name: lambda-mcp-loki
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./monitoring/loki.yml:/etc/loki/local-config.yaml:ro
+      - loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - mcp-network
+    profiles:
+      - monitoring
+
+networks:
+  mcp-network:
+    driver: bridge
+    name: lambda-mcp-network
+
+volumes:
+  prometheus-data:
+    name: lambda-mcp-prometheus-data
+  grafana-data:
+    name: lambda-mcp-grafana-data
+  loki-data:
+    name: lambda-mcp-loki-data

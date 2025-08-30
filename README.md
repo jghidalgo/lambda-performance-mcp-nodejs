@@ -190,11 +190,11 @@ npm run dev
 }
 ```
 
-## Configuration with Kiro
+## Configuration with MCP Clients
 
-To use this MCP server with Kiro, add it to your MCP configuration:
+To use this MCP server with MCP clients, add it to your MCP configuration:
 
-### Workspace Configuration (`.kiro/settings/mcp.json`)
+### Workspace Configuration (`.mcp/settings/mcp.json`)
 ```json
 {
   "mcpServers": {
@@ -217,7 +217,7 @@ To use this MCP server with Kiro, add it to your MCP configuration:
 }
 ```
 
-### Global Configuration (`~/.kiro/settings/mcp.json`)
+### Global Configuration (`~/.mcp/settings/mcp.json`)
 ```json
 {
   "mcpServers": {
