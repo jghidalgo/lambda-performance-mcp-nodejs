@@ -2,6 +2,10 @@
 
 A comprehensive Model Context Protocol (MCP) server for analyzing AWS Lambda performance, tracking cold starts, and providing optimization recommendations. Built with Node.js and the AWS SDK v3.
 
+<a href="https://glama.ai/mcp/servers/@jghidalgo/lambda-performance-mcp-nodejs">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@jghidalgo/lambda-performance-mcp-nodejs/badge" alt="Lambda Performance Server MCP server" />
+</a>
+
 ## Features
 
 ### Performance Analysis
